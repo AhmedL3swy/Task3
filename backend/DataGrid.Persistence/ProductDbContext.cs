@@ -1,18 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataGrid.Domain;
+using DataGrid.Persistence.Configurations;
+using DataGrid.Persistence.Seed;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataGrid.Persistence
 {
-    class ProductDbContext : DbContext
+    class AppDbContext : DbContext
     {
-        public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 
-        // DBsets
+        #region DbSets
+        public DbSet<User> Users { get; set; }
+        #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-        }
+            #region User configuration
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            UserSeedData.Seed(modelBuilder);
+            #endregion
 
+        }
     }
 }

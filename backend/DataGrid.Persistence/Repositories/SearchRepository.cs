@@ -11,13 +11,13 @@ namespace DataGrid.Persistence.Repositories
     /// <typeparam name="DbSet">The type of the entity set.</typeparam>
     internal class SearchRepository<DbSet> : ISearchRepository<DbSet> where DbSet : class
     {
-        private readonly ProductDbContext _context;
+        private readonly AppDbContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchRepository{DbSet}"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public SearchRepository(ProductDbContext context)
+        public SearchRepository(AppDbContext context)
         {
             _context = context;
         }
