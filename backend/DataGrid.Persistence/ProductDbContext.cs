@@ -13,6 +13,8 @@ namespace DataGrid.Persistence
 
         #region DbSets
         public DbSet<User> Users { get; set; }
+
+        public DbSet<MaritalStatus> MaritalStatuses { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

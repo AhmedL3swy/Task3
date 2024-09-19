@@ -38,43 +38,47 @@ export class GridContainerComponent {
   }
 
   dataGird: DataGridConfig = {
-    dataApi: 'https://localhost:7237/api/Product/SearchV3',
+    dataApi: 'https://localhost:7237/api/Users/Search',
     columns: [
       {
         header: 'headers.enTitle',
-        field: 'enName',
+        field: 'firstName',
         sortable: true,
       },
       {
         header: 'headers.arTitle',
-        field: 'arName',
+        field: 'lastName',
         sortable: true,
       },
       {
         header: 'headers.Description',
-        field: 'description',
+        field: 'email',
         isMultiLang: true,
         sortable: true,
       },
       {
         header: 'headers.Price',
-        field: 'price',
+        field: 'mobile',
         sortable: true,
       },
       {
         header: 'headers.Stock',
-        field: 'stock',
+        field: 'municipalNo',
         sortable: true,
       },
       {
         header: 'headers.AddedOn',
-        field: 'addedDate',
+        field: 'nationalId',
         sortable: true,
       },
       {
         header: 'headers.enCategoryName',
-        field: 'enCategoryName',
+        field: 'maritalStatus',
         sortable: false,
+      },
+      {
+        header: 'headers.arCategoryName',
+        field: 'address',
       },
     ],
     actions: [

@@ -3,6 +3,7 @@ using DataGrid.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataGrid.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240919081329_replaceEnumWithTable")]
+    partial class replaceEnumWithTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,6 +89,10 @@ namespace DataGrid.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MaritalStatus")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
 
                     b.Property<int>("MaritalStatusId")
                         .HasColumnType("int");
@@ -491,13 +498,11 @@ namespace DataGrid.Persistence.Migrations
 
             modelBuilder.Entity("DataGrid.Domain.User", b =>
                 {
-                    b.HasOne("DataGrid.Domain.MaritalStatus", "MaritalStatus")
+                    b.HasOne("DataGrid.Domain.MaritalStatus", null)
                         .WithMany("Users")
                         .HasForeignKey("MaritalStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("MaritalStatus");
                 });
 
             modelBuilder.Entity("DataGrid.Domain.MaritalStatus", b =>

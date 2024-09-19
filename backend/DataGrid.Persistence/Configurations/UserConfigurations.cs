@@ -12,13 +12,7 @@ namespace DataGrid.Persistence.Configurations
             // Define constraints and validation rules
             builder.HasKey(u => u.Id);
 
-            builder
-              .Property(u => u.MaritalStatus)
-              .HasConversion(
-                  v => v.ToString(),
-                  v => (MaritalStatus)Enum.Parse(typeof(MaritalStatus), v))
-              .IsUnicode(false);
-
+          
             builder.Property(u => u.FirstName)
                 .IsRequired()
                 .HasMaxLength(50);
