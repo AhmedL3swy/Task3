@@ -16,7 +16,7 @@ namespace DataGrid.Application.Features.Users.Command.AddUser
             RuleFor(user => user.FirstName)
                 .NotEmpty().WithMessage("First name is required.");
 
-            RuleFor(user => user.LastName)
+            RuleFor(user => user.LastName )
                 .NotEmpty().WithMessage("Last name is required.");
 
             RuleFor(user => user.Email)
