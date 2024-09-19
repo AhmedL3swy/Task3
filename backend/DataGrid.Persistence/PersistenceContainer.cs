@@ -1,5 +1,6 @@
 ﻿using DataGrid.Application.Contracts;
 using DataGrid.Persistence.Repositories;
+using DataGrid.Persistence.SingletonServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ namespace DataGrid.Persistence
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddScoped(typeof(ISearchRepository<>), typeof(SearchRepository<>));
+            services.AddSingleton<IMaritalStatusService, MaritalStatusService>();
+            services.AddScoped<UserRepository>();
 
             return services;
         }

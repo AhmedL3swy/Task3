@@ -17,8 +17,4 @@
 		<ProjectReference Include="..\DataGrid.Domain\DataGrid.Domain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Features\Users\Command\" />
-	</ItemGroup>
-
 </Project>

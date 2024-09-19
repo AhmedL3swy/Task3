@@ -1,5 +1,8 @@
 using DataGrid.Persistence;
 using DataGrid.Application;
+using FluentValidation;
+using DataGrid.Domain;
+using DataGrid.Application.Features.Users.Command.AddUser;
 namespace SearchApiCqrs
 {
     public class Program
@@ -13,6 +16,7 @@ namespace SearchApiCqrs
             builder.Services.AddApplicationServices();
             builder.Services.AddMediatorGenericHandelers();
 
+            builder.Services.AddTransient<IValidator<User>, UserValidator>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

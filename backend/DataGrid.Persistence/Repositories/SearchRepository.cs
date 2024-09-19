@@ -9,7 +9,7 @@ namespace DataGrid.Persistence.Repositories
     /// Represents a repository for searching entities in version 2.
     /// </summary>
     /// <typeparam name="DbSet">The type of the entity set.</typeparam>
-    internal class SearchRepository<DbSet> : ISearchRepository<DbSet> where DbSet : class
+    public class SearchRepository<DbSet> : ISearchRepository<DbSet> where DbSet : class
     {
         private readonly AppDbContext _context;
 

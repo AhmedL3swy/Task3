@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using DataGrid.Application.Features.Users.Command.AddUser;
+using DataGrid.Domain;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
