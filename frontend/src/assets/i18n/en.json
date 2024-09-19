@@ -1,0 +1,16 @@
+{
+  "buttons": {
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "BDelete": "Delete Selected"
+  },
+  "headers": {
+    "enTitle": "English Title",
+    "arTitle": "Arabic Title",
+    "Description": "Description",
+    "Price": "Price",
+    "Stock": "Stock",
+    "AddedOn": "Added On",
+    "enCategoryName": "English Category Name"
+  }
+}

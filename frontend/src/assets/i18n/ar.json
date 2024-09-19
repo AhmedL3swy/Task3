@@ -1,0 +1,16 @@
+{
+  "buttons": {
+    "Edit": "تعديل",
+    "Delete": "حذف",
+    "BDelete":"حذف المحدد"
+  },
+  "headers": {
+    "enTitle": "العنوان بالإنجليزية",
+    "arTitle": "العنوان بالعربية",
+    "Description": "الوصف",
+    "Price": "السعر",
+    "Stock": "المخزون",
+    "AddedOn": "تاريخ الإضافة",
+    "enCategoryName": "اسم الفئة بالإنجليزية"
+  }
+}
