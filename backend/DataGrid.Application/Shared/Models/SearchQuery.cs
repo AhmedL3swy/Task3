@@ -5,16 +5,19 @@ namespace DataGrid.Application.Shared.Models
     /// <summary>
     /// Represents a search query with additional properties for version 2.
     /// </summary>
-    public class SearchQuery 
+    public class SearchQuery
     {
+
         /// <summary>
         /// Gets or sets the list of search keywords that will be Used to search the data. * by Cascading Search "AND"
         /// </summary>
+        [JsonIgnore]
         public List<SearchByKeyword> SearchByKeyword { get; set; } = new List<SearchByKeyword>();
 
         /// <summary>
         /// Gets or sets the list of range searches  by Cascading Search "AND".
         /// </summary>
+        [JsonIgnore]
         public List<RangeSearch> RangeSearch { get; set; } = new List<RangeSearch>();
         /// <summary>
         /// The Name of the Property to sort by.
