@@ -22,10 +22,9 @@
       <input
         type="text"
         class="form-control d-inline"
-        placeholder="Search By Arabic Or English Name"
+        placeholder="Search By FirstName Or LastName Name"
         #search
-        [(ngModel)]="nameSearchvalue"
-  
+        [(ngModel)]="name"
       />
             <!-- (keyup.enter)="onSearch(search.value)"
         (input)="strip(search.value)" -->
@@ -36,9 +35,9 @@
         Search
       </button>
       <!-- Cancel Search -->
-      <button class="btn btn-primary" (click)="onCancelSearch()">
+      <!-- <button class="btn btn-primary" (click)="onCancelSearch()">
         Reset Search
-      </button>
+      </button> -->
     </div>
   </div>
 
@@ -48,17 +47,68 @@
       <input
         type="text"
         class="form-control d-inline"
-        placeholder="Search By Arabic Or English Cateogry Name"
+        placeholder="Search By Email"
         #search
-        [(ngModel)]="categorySearchValue"
+        [(ngModel)]="email"
   
       />
     </div>
   </div>  
-   
+     <div class="row">
+    <div class="col-2"></div>
+    <div class="col-6">
+      <input
+        type="text"
+        class="form-control d-inline"
+        placeholder="Search By Mobile"
+        #search
+        [(ngModel)]="mobile"
+  
+      />
+    </div>
+  </div> 
+    <div class="row">
+    <div class="col-2"></div>
+    <div class="col-6">
+      <input
+        type="text"
+        class="form-control d-inline"
+        placeholder="Search By nationalId"
+        #search
+        [(ngModel)]="nationalId"
+  
+      />
+    </div>
+  </div>   
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-6">
+      <input
+        type="text"
+        class="form-control d-inline"
+        placeholder="Search By municipalNo"
+        #search
+        [(ngModel)]="municipalNo"
+  
+      />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-6">
+      <input
+        type="text"
+        class="form-control d-inline"
+        placeholder="Search By maritalStatus"
+        #search
+        [(ngModel)]="maritalStatus"
+  
+      />
+    </div>
+  </div>
   <!-- End Search -->
   <!-- Date Range Search -->
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-2"></div>
     <div class="col-3">
       <input
@@ -77,7 +127,7 @@
         #toDate
         [(ngModel)]="endDate"
       />
-    </div>
+    </div> -->
     <!-- <div class="col-3">
     <button
       class="btn btn-primary d-inline"
@@ -90,7 +140,7 @@
       Reset Search
     </button>
   </div> -->
-  </div>
+  <!-- </div> -->
   <!-- End Date Range Search -->
   <!-- Add Filter By Cateogry -->
   <!-- <div class="row">

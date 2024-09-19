@@ -11,6 +11,15 @@
     "Price": "Price",
     "Stock": "Stock",
     "AddedOn": "Added On",
-    "enCategoryName": "English Category Name"
+    "enCategoryName": "English Category Name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "municipalNo": "Municipal Number",
+    "nationalId": "National ID",
+    "maritalStatus": "Marital Status"
+    
   }
 }

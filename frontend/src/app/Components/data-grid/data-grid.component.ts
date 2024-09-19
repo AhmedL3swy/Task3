@@ -73,25 +73,31 @@ export class DataGridComponent {
   // #endregion
   // Other Helper Objects
   searchObj: any = {};
-  rangeSearchObj : RangeSearch[] = [
+  rangeSearchObj: RangeSearch[] = [
     {
       field: '',
       start: '',
       end: '',
     },
   ];
-  nestedSearchObj : NestedSearch[] = [
+  nestedSearchObj: NestedSearch[] = [
     {
       relativePath: 'Category.EnName',
       value: '',
     },
   ];
   paginatorOptions: PaginatorOptions = [5, 10, 15, 20, 25, 50, 100];
-  searchKeyWord :string = '';
+  searchKeyWord: string = '';
   // #endregion
 
   // #region FIlter
   filter: any[] = [];
+  name: string = '';
+  email: string = '';
+  mobile: string = '';
+  nationalId: string = '';
+  municipalNo: string = '';
+  maritalStatus: string = '';
 
   // #endregion
   // #region Constructor
@@ -144,9 +150,13 @@ export class DataGridComponent {
         this.state.currentSortColumn.charAt(0).toUpperCase() +
         this.state.currentSortColumn.slice(1),
       [this.request.sortDirection]: this.state.sortDirection === 'asc' ? 1 : 0,
-      searchName: this.nameSearchvalue,
-      searchCategoryName: this.categorySearchValue,
-      startEndDate:this.startDate+"|"+this.endDate,
+      name: this.name,
+      email: this.email,
+      mobile: this.mobile,
+      nationalId: this.nationalId,
+      municipalNo: this.municipalNo,
+      maritalStatus: this.maritalStatus,
+      
 
       //   [this.request.search]: this.searchObj,
       //   [this.request.rangeSearch]: this.rangeSearchObj.map((range) => {
@@ -252,7 +262,7 @@ export class DataGridComponent {
     // this.searchObj = SearchObj;
     // // (this.searchObj as any)[SearchField] = value;
     // if (value===this.searchKeyWord ) return;
-   // this.searchSubject.next(value);
+    // this.searchSubject.next(value);
     // this.searchKeyWord = value;
     // if (
     //   !this.isEmptyDate(this.fromDate.nativeElement.value) ||

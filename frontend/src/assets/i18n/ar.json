@@ -11,6 +11,14 @@
     "Price": "السعر",
     "Stock": "المخزون",
     "AddedOn": "تاريخ الإضافة",
-    "enCategoryName": "اسم الفئة بالإنجليزية"
+    "enCategoryName": "اسم الفئة بالإنجليزية",
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم الأخير",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "address": "العنوان",
+    "municipalNo": "رقم التوظيف",
+    "nationalId": "رقم الهوية",
+    "maritalStatus": "الحالة الاجتماعية"
   }
 }
