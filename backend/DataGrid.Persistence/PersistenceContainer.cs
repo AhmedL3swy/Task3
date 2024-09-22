@@ -16,6 +16,7 @@ namespace DataGrid.Persistence
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddScoped(typeof(ISearchRepository<>), typeof(SearchRepository<>));
+            services.AddScoped(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
             services.AddSingleton<IMaritalStatusService, MaritalStatusService>();
             services.AddScoped<UserRepository>();
 

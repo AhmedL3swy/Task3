@@ -16,7 +16,9 @@ namespace DataGrid.Application.Profiles
             CreateMap<SearchResult<User>, SearchResult<UserResultDto>>().
                 ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data)).ReverseMap();
             CreateMap<User, NewUserDto>().ReverseMap();
-            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<UserDto, User>()
+                .ForAllMembers(opts =>
+                    opts.Condition((src, dest, srcMember) => srcMember != null));
 
 
         }

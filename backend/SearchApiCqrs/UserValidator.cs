@@ -40,7 +40,7 @@ namespace DataGrid.Application.Features.Users.Command.AddUser
                 .MustAsync((user, nationalId, cancellationToken) => IsUniqueField(user, "NationalId", cancellationToken)).WithMessage("National ID already exists.");
 
             RuleFor(user => user.MaritalStatusId)
-                .MustAsync(IsValidMaritalStatus).WithMessage("Marital status is not valid.");
+                .NotEmpty().WithMessage("Marital status is required.");
         }
 
         // Consolidated uniqueness check for email, mobile, municipal number, and national ID
@@ -48,17 +48,14 @@ namespace DataGrid.Application.Features.Users.Command.AddUser
         {
             return propertyName switch
             {
-                "Email" => await _userRepository.IsEmailUniqueAsync(user),
-                "Mobile" => await _userRepository.IsMobileUniqueAsync(user),
-                "MunicipalNo" => await _userRepository.IsMunicipalNoUniqueAsync(user),
-                "NationalId" => await _userRepository.IsNationalIdUniqueAsync(user),
+                "Email" => await _userRepository.IsUniqueAsync(user, "Email", "Id"),
+                "Mobile" => await _userRepository.IsUniqueAsync(user, "Mobile", "Id"),
+                "MunicipalNo" => await _userRepository.IsUniqueAsync(user, "MunicipalNo", "Id"),
+                "NationalId" => await _userRepository.IsUniqueAsync(user, "NationalId", "Id"),
                 _ => true
             };
         }
 
-        private async Task<bool> IsValidMaritalStatus(int maritalStatusId, CancellationToken cancellationToken)
-        {
-            return await _userRepository.IsMaritalStatusValidAsync(maritalStatusId);
-        }
+
     }
 }

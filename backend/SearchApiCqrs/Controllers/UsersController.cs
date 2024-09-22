@@ -43,7 +43,7 @@ namespace DataGrid.Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] int id)
         {
-            var user = await _userRepository.GetUserById(id);
+            var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -59,8 +59,9 @@ namespace DataGrid.Api.Controllers
             {
                 return BadRequest(validationResult.ToDictionary());
             }
-            await _userRepository.AddUser(user);
-            return Created();
+            await _userRepository.AddAsync(user);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+
         }
         // Edit User
         [HttpPut]
@@ -68,15 +69,59 @@ namespace DataGrid.Api.Controllers
         public async Task<IActionResult> EditUser([FromBody] UserDto userDto, [FromRoute] int id)
         {
             userDto.Id = id;
-            var user = _mapper.Map<UserDto, User>(userDto);
-            var validationResult = await _userValidator.ValidateAsync(user);
+            // Retrieve the existing user
+            var existingUser = await _userRepository.GetByIdAsync(id);
+            if (existingUser == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Map non-null fields from userDto to the existing user
+            _mapper.Map(userDto, existingUser);
+
+            // Validate the updated user object
+            var validationResult = await _userValidator.ValidateAsync(existingUser);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.ToDictionary());
             }
-            await _userRepository.EditUser(user);
-            return Ok();
+
+            // Update the user
+            await _userRepository.UpdateAsync(existingUser);
+
+            return CreatedAtAction(nameof(GetUser), new { id = existingUser.Id }, existingUser);
         }
+
+        #region Validators Api
+        [HttpGet]
+        public async Task<IActionResult> IsUnique([FromQuery] string propertyName, [FromQuery] string value, [FromQuery] int id)
+        {
+            var user = new User();
+            user.Id = id;
+            switch (propertyName)
+            {
+                case "Email":
+                    user.Email = value;
+                    break;
+                case "Mobile":
+                    user.Mobile = value;
+                    break;
+                case "MunicipalNo":
+                    user.MunicipalNo = value;
+                    break;
+                case "NationalId":
+                    user.NationalId = value;
+                    break;
+                default:
+                    return BadRequest("Invalid property name.");
+            }
+
+            var isUnique = await _userRepository.IsUniqueAsync(user, propertyName, "Id");
+            return Ok(isUnique);
+        }
+        #endregion
+
+
 
     }
 }
