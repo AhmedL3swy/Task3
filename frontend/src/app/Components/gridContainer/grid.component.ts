@@ -7,6 +7,7 @@ import {
 import { ActionType } from '../../types/action-config';
 import { DataGridComponent } from '../data-grid/data-grid.component';
 import { DataGridService } from '../../Services/data-grid.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-grid',
@@ -18,7 +19,8 @@ import { DataGridService } from '../../Services/data-grid.service';
 export class GridContainerComponent {
   constructor(
     private dataGridService: DataGridService,
-    private ApiService: ApiService
+    private ApiService: ApiService,
+    private router: Router
   ) {}
   resetGrid() {
     this.dataGridService.emitResetSingal();
@@ -26,8 +28,11 @@ export class GridContainerComponent {
   isAdmin() {
     return true;
   }
+  Add() {
+    this.router.navigate(['/add']);
+  }
   edit(entity: any) {
-    alert('edit' + JSON.stringify(entity));
+    this.router.navigate(['/edit', entity.id]);
   }
   delete(entity: any) {
     alert(' delete logic' + JSON.stringify(entity));
@@ -86,7 +91,7 @@ export class GridContainerComponent {
         callback: (entity) => this.edit(entity),
         enabled: this.isAdmin(),
         type: ActionType.Single,
-        actionDisplayType: ActionDisplayType.HEADER,
+        actionDisplayType: ActionDisplayType.ROW,
       },
       {
         name: 'buttons.Delete',

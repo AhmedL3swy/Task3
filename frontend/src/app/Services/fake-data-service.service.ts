@@ -19,5 +19,16 @@ export class ApiService {
     console.log(`Search Singal Sent to ` + `${apiUrl}`);
     return this.httpClient.post(apiUrl, search);
   }
- 
+  addEntity(apiUrl: string, entity: any) {
+    console.log(`Add Singal Sent to ` + `${apiUrl}`);
+    return this.httpClient.post(apiUrl, entity);
+  }
+  updateEntity(apiUrl: string, entity: any) {
+    console.log(`Update Singal Sent to ` + `${apiUrl}`);
+    return this.httpClient.put(apiUrl, entity);
+  }
+  getEntityById(apiUrl: string, id: string) {
+    console.log(`Get Singal Sent to ` + `${apiUrl}/${id}`);
+    return this.httpClient.get(`${apiUrl}/${id}`);
+  }
 }

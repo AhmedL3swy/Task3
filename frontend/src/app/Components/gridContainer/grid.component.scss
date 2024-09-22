@@ -1,0 +1,28 @@
+.addBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    
+    &:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        background-color: #3e8e41;
+        transform: translateY(2px);
+    }
+}
