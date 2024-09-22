@@ -9,21 +9,28 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../Services/fake-data-service.service';
+import { HttpParams } from '@angular/common/http';
+import { UniqueValidatorDirective } from '../../customeDirectives/unique-validator';
 
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    UniqueValidatorDirective,
+  ],
   styleUrls: ['./add-user.component.scss'],
 })
 export class AddUserComponent implements OnInit {
   userForm!: FormGroup;
-  maritalStatusOptions = [
-    { id: 1, value: 'Single' },
-    { id: 2, value: 'Married' },
-    { id: 3, value: 'Divorced' },
-    { id: 4, value: 'Widower' },
+  maritalStatusOptions: any = [
+    { id: 1, name: 'Single' },
+    { id: 2, name: 'Married' },
+    { id: 3, name: 'Divorced' },
+    { id: 4, name: 'Widower' },
   ];
   isEditMode = false;
   userId: string | null = null;
@@ -63,6 +70,20 @@ export class AddUserComponent implements OnInit {
     this.userForm.valueChanges.subscribe(() => {
       this.clearServerErrors();
     });
+    // OverRide Maritual Status Dict from   'https://localhost:7237/api/MaritalStatus/GetMaritalStatuses' \ id,name
+    this.dataService
+      .getData(
+        'https://localhost:7237/api/MaritalStatus/GetMaritalStatuses',
+        new HttpParams()
+      )
+      .subscribe(
+        (res) => {
+          this.maritalStatusOptions = res;
+        },
+        (err) => {
+          console.error('Error loading marital status options', err);
+        }
+      );
   }
 
   // Load user details for editing
@@ -118,6 +139,8 @@ export class AddUserComponent implements OnInit {
           }
         );
       }
+    } else {
+      this.userForm.markAllAsTouched();
     }
   }
 

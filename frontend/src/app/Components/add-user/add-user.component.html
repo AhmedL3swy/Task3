@@ -2,7 +2,7 @@
   [formGroup]="userForm"
   (ngSubmit)="onSubmit()"
   class="form"
-style="max-width: 600px; margin: auto; margin-top: 5%;"
+  style="max-width: 600px; margin: auto; margin-top: 5%"
 >
   <!-- First Name -->
   <div class="form-group">
@@ -29,8 +29,7 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
     <input id="lastName" formControlName="lastName" class="form-control" />
     <div
       *ngIf="
-        f['lastName'].invalid &&
-        (f['lastName'].dirty || f['lastName'].touched)
+        f['lastName'].invalid && (f['lastName'].dirty || f['lastName'].touched)
       "
     >
       <small *ngIf="f['lastName'].errors?.['required']" class="text-danger">
@@ -45,11 +44,15 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
   <!-- Email -->
   <div class="form-group">
     <label for="email">Email:</label>
-    <input id="email" formControlName="email" class="form-control" />
+    <input id="email" formControlName="email" class="form-control" UniqueValidator [propertyName]="'Email'" [userId]="userId ? userId : '0'"/>
     <div *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)">
       <small *ngIf="f['email'].errors?.['required']" class="text-danger">
         Email is required.
       </small>
+      <!-- notUnique -->
+        <small *ngIf="f['email'].errors?.['notUnique']" class="text-danger">
+            Email is already taken.
+        </small>
       <small *ngIf="f['email'].errors?.['email']" class="text-danger">
         Invalid email format.
       </small>
@@ -62,13 +65,16 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
   <!-- Mobile -->
   <div class="form-group">
     <label for="mobile">Mobile:</label>
-    <input id="mobile" formControlName="mobile" class="form-control" />
+    <input id="mobile" formControlName="mobile" class="form-control" UniqueValidator [propertyName]="'Mobile'" [userId]="userId ? userId : '0'" />
     <div
       *ngIf="f['mobile'].invalid && (f['mobile'].dirty || f['mobile'].touched)"
     >
       <small *ngIf="f['mobile'].errors?.['required']" class="text-danger">
         Mobile is required.
       </small>
+       <small *ngIf="f['mobile'].errors?.['notUnique']" class="text-danger">
+            Mobile is already taken.
+        </small>
       <small *ngIf="f['mobile'].errors?.['pattern']" class="text-danger">
         Invalid mobile format. Must start with 05 and be 10 digits long.
       </small>
@@ -81,7 +87,12 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
   <!-- Municipal No -->
   <div class="form-group">
     <label for="municipalNo">Municipal No:</label>
-    <input id="municipalNo" formControlName="municipalNo" class="form-control" />
+    <input
+      id="municipalNo"
+      formControlName="municipalNo"
+      class="form-control"
+      UniqueValidator [propertyName]="'MunicipalNo'" [userId]="userId ? userId : '0'"
+    />
     <div
       *ngIf="
         f['municipalNo'].invalid &&
@@ -91,10 +102,16 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
       <small *ngIf="f['municipalNo'].errors?.['required']" class="text-danger">
         Municipal number is required.
       </small>
-        <small *ngIf="f['municipalNo'].errors?.['pattern']" class="text-danger">
-            Invalid municipal number format. Must be 6-10 digits long.
+       <small *ngIf="f['municipalNo'].errors?.['notUnique']" class="text-danger">
+            municipalNo is already taken.
         </small>
-      <small *ngIf="f['municipalNo'].errors?.['serverError']" class="text-danger">
+      <small *ngIf="f['municipalNo'].errors?.['pattern']" class="text-danger">
+        Invalid municipal number format. Must be 6-10 digits long.
+      </small>
+      <small
+        *ngIf="f['municipalNo'].errors?.['serverError']"
+        class="text-danger"
+      >
         {{ f['municipalNo'].errors?.['serverError'] }}
       </small>
     </div>
@@ -103,7 +120,8 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
   <!-- National ID -->
   <div class="form-group">
     <label for="nationalId">National ID:</label>
-    <input id="nationalId" formControlName="nationalId" class="form-control" />
+    <input id="nationalId" formControlName="nationalId" class="form-control" UniqueValidator [propertyName]="'NationalId'" [userId]="userId ? userId : '0'"
+  />
     <div
       *ngIf="
         f['nationalId'].invalid &&
@@ -113,10 +131,16 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
       <small *ngIf="f['nationalId'].errors?.['required']" class="text-danger">
         National ID is required.
       </small>
-        <small *ngIf="f['nationalId'].errors?.['pattern']" class="text-danger">
-            Invalid national ID format. Must be 10 digits long.
+       <small *ngIf="f['nationalId'].errors?.['notUnique']" class="text-danger">
+            NationalID is already taken.
         </small>
-      <small *ngIf="f['nationalId'].errors?.['serverError']" class="text-danger">
+      <small *ngIf="f['nationalId'].errors?.['pattern']" class="text-danger">
+        Invalid national ID format. Must be 10 digits long.
+      </small>
+      <small
+        *ngIf="f['nationalId'].errors?.['serverError']"
+        class="text-danger"
+      >
         {{ f['nationalId'].errors?.['serverError'] }}
       </small>
     </div>
@@ -125,9 +149,13 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
   <!-- Marital Status -->
   <div class="form-group">
     <label for="maritalStatusId">Marital Status:</label>
-    <select id="maritalStatusId" formControlName="maritalStatusId" class="form-control">
+    <select
+      id="maritalStatusId"
+      formControlName="maritalStatusId"
+      class="form-control"
+    >
       <option *ngFor="let status of maritalStatusOptions" [value]="status.id">
-        {{ status.value }}
+        {{ status.name }}
       </option>
     </select>
     <div
@@ -154,14 +182,27 @@ style="max-width: 600px; margin: auto; margin-top: 5%;"
   <!-- Address -->
   <div class="form-group">
     <label for="address">Address:</label>
-    <textarea id="address" formControlName="address" class="form-control"></textarea>
+    <textarea
+      id="address"
+      formControlName="address"
+      class="form-control"
+    ></textarea>
   </div>
 
+  <div class="row mt-3" >
+    <div class="col-10">
+      <button
+        type="submit"
+        class="btn btn-primary"
+      >
+        Submit
+      </button>
+    </div>
+    <div class="col-2">
+      <button class="btn btn-dark" (click)="back()">Back</button>
+    </div>
+  </div>
   <!-- Submit Button -->
-  <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">
-    Submit
-  </button>
-  <!-- Back -->
-    <button class="btn btn-primary" (click)="back()">Back</button>
 
+  <!-- Back -->
 </form>
