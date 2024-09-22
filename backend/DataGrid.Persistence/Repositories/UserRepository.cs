@@ -121,6 +121,7 @@ namespace DataGrid.Persistence.Repositories
         {
             return await _appDbContext.MaritalStatuses.AnyAsync(m => m.Id == maritalStatusId);
         }
+
         #endregion
     }
     #endregion

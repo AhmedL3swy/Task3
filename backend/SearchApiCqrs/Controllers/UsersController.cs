@@ -9,6 +9,7 @@ using DataGrid.Persistence.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace DataGrid.Api.Controllers
 {
@@ -38,6 +39,17 @@ namespace DataGrid.Api.Controllers
             var mappedResult = _mapper.Map<SearchResult<User>, SearchResult<UserResultDto>>(result);
             return Ok(mappedResult);
         }
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> GetUser([FromRoute] int id)
+        {
+            var user = await _userRepository.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] NewUserDto userDto)
         {
@@ -45,20 +57,22 @@ namespace DataGrid.Api.Controllers
             var validationResult = await _userValidator.ValidateAsync(user);
             if (!validationResult.IsValid)
             {
-                return BadRequest(validationResult.Errors);
+                return BadRequest(validationResult.ToDictionary());
             }
             await _userRepository.AddUser(user);
             return Created();
         }
         // Edit User
         [HttpPut]
-        public async Task<IActionResult> EditUser([FromBody] UserDto userDto)
+        [Route("{id}")]
+        public async Task<IActionResult> EditUser([FromBody] UserDto userDto, [FromRoute] int id)
         {
+            userDto.Id = id;
             var user = _mapper.Map<UserDto, User>(userDto);
             var validationResult = await _userValidator.ValidateAsync(user);
             if (!validationResult.IsValid)
             {
-                return BadRequest(validationResult.Errors);
+                return BadRequest(validationResult.ToDictionary());
             }
             await _userRepository.EditUser(user);
             return Ok();

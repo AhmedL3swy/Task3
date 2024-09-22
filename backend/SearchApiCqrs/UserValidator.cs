@@ -16,50 +16,44 @@ namespace DataGrid.Application.Features.Users.Command.AddUser
             RuleFor(user => user.FirstName)
                 .NotEmpty().WithMessage("First name is required.");
 
-            RuleFor(user => user.LastName )
+            RuleFor(user => user.LastName)
                 .NotEmpty().WithMessage("Last name is required.");
 
             RuleFor(user => user.Email)
                 .NotEmpty().WithMessage("Email is required.")
-                .EmailAddress().WithMessage("Invalid email format.");
+                .EmailAddress().WithMessage("Invalid email format.")
+                .MustAsync((user, email, cancellationToken) => IsUniqueField(user, "Email", cancellationToken)).WithMessage("Email already exists.");
 
             RuleFor(user => user.Mobile)
                 .NotEmpty().WithMessage("Mobile is required.")
-                .Matches(@"^05\d{8}$").WithMessage("Invalid mobile format. Must start with 05 and be 10 digits long.");
+                .Matches(@"^05\d{8}$").WithMessage("Invalid mobile format. Must start with 05 and be 10 digits long.")
+                .MustAsync((user, mobile, cancellationToken) => IsUniqueField(user, "Mobile", cancellationToken)).WithMessage("Mobile already exists.");
 
             RuleFor(user => user.MunicipalNo)
-                .NotEmpty().WithMessage("Municipal number is required.");
+                .NotEmpty().WithMessage("Municipal number is required.")
+                .Matches(@"^\d{6,10}$").WithMessage("Invalid municipal number format. Must be between 6 and 10 digits long.")
+                .MustAsync((user, municipalNo, cancellationToken) => IsUniqueField(user, "MunicipalNo", cancellationToken)).WithMessage("Municipal number already exists.");
 
             RuleFor(user => user.NationalId)
-                .NotEmpty().WithMessage("National ID is required.");
+                .NotEmpty().WithMessage("National ID is required.")
+                .Matches(@"^\d{10}$").WithMessage("Invalid national ID format. Must be 10 digits long.")
+                .MustAsync((user, nationalId, cancellationToken) => IsUniqueField(user, "NationalId", cancellationToken)).WithMessage("National ID already exists.");
 
             RuleFor(user => user.MaritalStatusId)
                 .MustAsync(IsValidMaritalStatus).WithMessage("Marital status is not valid.");
-            RuleFor(user => user)
-                .MustAsync(BeUniqueEmail).WithMessage("Email already exists.").WithName("Email")
-                .MustAsync(BeUniqueMobile).WithMessage("Mobile already exists.").WithName("Mobile")
-                .MustAsync(BeUniqueMunicipalNo).WithMessage("Municipal number already exists.").WithName("MunicipalNo")
-                .MustAsync(BeUniqueNationalId).WithMessage("National ID already exists.").WithName("NationalId");
         }
 
-        private async Task<bool> BeUniqueEmail(User user, CancellationToken cancellationToken)
+        // Consolidated uniqueness check for email, mobile, municipal number, and national ID
+        private async Task<bool> IsUniqueField(User user, string propertyName, CancellationToken cancellationToken)
         {
-            return await _userRepository.IsEmailUniqueAsync(user);
-        }
-
-        private async Task<bool> BeUniqueMobile(User user, CancellationToken cancellationToken)
-        {
-            return await _userRepository.IsMobileUniqueAsync(user);
-        }
-
-        private async Task<bool> BeUniqueMunicipalNo(User user, CancellationToken cancellationToken)
-        {
-            return await _userRepository.IsMunicipalNoUniqueAsync(user);
-        }
-
-        private async Task<bool> BeUniqueNationalId(User user, CancellationToken cancellationToken)
-        {
-            return await _userRepository.IsNationalIdUniqueAsync(user);
+            return propertyName switch
+            {
+                "Email" => await _userRepository.IsEmailUniqueAsync(user),
+                "Mobile" => await _userRepository.IsMobileUniqueAsync(user),
+                "MunicipalNo" => await _userRepository.IsMunicipalNoUniqueAsync(user),
+                "NationalId" => await _userRepository.IsNationalIdUniqueAsync(user),
+                _ => true
+            };
         }
 
         private async Task<bool> IsValidMaritalStatus(int maritalStatusId, CancellationToken cancellationToken)
