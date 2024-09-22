@@ -23,7 +23,8 @@ export class UniqueValidatorDirective {
 
   @HostListener('blur') async onBlur() {
     const value = this.el.nativeElement.value;
-    if (!value || !this.propertyName) {
+    // If There any existing errors, don't call the API (Performance optimization)
+    if (this.control.control?.errors) {
       return;
     }
 
@@ -38,10 +39,10 @@ export class UniqueValidatorDirective {
       .subscribe({
         next: (isUnique) => {
           if (!isUnique) {
-            // If not unique, show an error
+            // If not unique, set notUnique error
             this.control.control?.setErrors({ notUnique: true });
           } else {
-            // Clear only unique error if value is unique
+            // Clear only unique error if value is no longer duplicated
             const errors = this.control.control?.errors;
             if (errors) {
               delete errors['notUnique'];

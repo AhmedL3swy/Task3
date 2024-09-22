@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../Services/fake-data-service.service';
 import { HttpParams } from '@angular/common/http';
 import { UniqueValidatorDirective } from '../../customeDirectives/unique-validator';
+import { emailAsyncValidator } from '../../customValidations/unique-email-validator';
 
 @Component({
   selector: 'app-add-user',
@@ -46,9 +47,17 @@ export class AddUserComponent implements OnInit {
   ngOnInit(): void {
     // Initialize form
     this.userForm = this.fb.group({
+      userId: [this.userId],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      email: [
+        '',
+        {
+          validators: [Validators.required, Validators.email],
+          asyncValidators: [emailAsyncValidator(this.dataService)],
+          updateOn: 'blur',
+        },
+      ],
       mobile: ['', [Validators.required, Validators.pattern(/^05\d{8}$/)]],
       municipalNo: [
         '',

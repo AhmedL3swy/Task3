@@ -31,4 +31,12 @@ export class ApiService {
     console.log(`Get Singal Sent to ` + `${apiUrl}/${id}`);
     return this.httpClient.get(`${apiUrl}/${id}`);
   }
+  isEmailUnique(apiUrl: string, email: string, id: string) {
+        const params = new HttpParams()
+          .set('propertyName', 'Email')
+          .set('value', email)
+          .set('id', id);
+
+    return this.httpClient.get<boolean>(apiUrl, { params });
+  }
 }
