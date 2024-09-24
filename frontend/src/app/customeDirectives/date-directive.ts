@@ -6,7 +6,9 @@ import { min } from 'rxjs';
   standalone: true,
 })
 export class DateParserDirective {
-  constructor(private el: ElementRef, private control: NgControl) {}
+  constructor(private el: ElementRef, private control: NgControl) {
+     this.el.nativeElement.style.userSelect = 'none';
+  }
   // Input Min and Max Year
   @Input() minYear: number = 1200;
   @Input() maxYear: number = new Date().getFullYear();
@@ -43,16 +45,16 @@ export class DateParserDirective {
     const nparsed = this.DateCorrection(parsed);
     this.el.nativeElement.value = nparsed;
 
-    // if (this.isInvalidDate(value)) {
-    //   this.control.control?.setErrors({ invalidDate: true });
-    //   return;
-    // } else {
-    //   const errors = this.control.control?.errors;
-    //   if (errors) {
-    //     delete errors['invalidDate'];
-    //     this.control.control?.setErrors({ ...errors });
-    //   }
-    // }
+    if (this.isInvalidDate(value)) {
+      this.control.control?.setErrors({ invalidDate: true });
+      return;
+    } else {
+      const errors = this.control.control?.errors;
+      if (errors) {
+        delete errors['invalidDate'];
+        this.control.control?.setErrors({ ...errors });
+      }
+    }
   }
 
   parseDate(date: string): string {
@@ -65,23 +67,20 @@ export class DateParserDirective {
 
   private dateParser(value: string): string {
     if (value.length <= 2) {
-      return this.padDay(value);
+      value = this.padDay(value);
+      return value.replace(/^(\d{0,2})/, '$1/');
     }
     if (value.length <= 4) {
-      return (
-        this.padDay(value.substring(0, 2)) +
-        '/' +
-        this.padMonth(value.substring(2))
-      );
+      value =
+        this.padDay(value.substring(0, 2)) + this.padMonth(value.substring(2));
+      return value.replace(/^(\d{0,2})(\d{0,2})/, '$1/$2/');
     }
     if (value.length <= 8) {
-      return (
+      value =
         this.padDay(value.substring(0, 2)) +
-        '/' +
         this.padMonth(value.substring(2, 4)) +
-        '/' +
-        this.padYear(value.substring(4))
-      );
+        this.padYear(value.substring(4));
+      return value.replace(/^(\d{0,2})(\d{0,2})(\d{0,4})/, '$1/$2/$3');
     }
     return this.DateCorrection(value);
   }
@@ -89,9 +88,8 @@ export class DateParserDirective {
     if (value[0] > '3') {
       return '0' + value[0];
     }
-    // Dont allow >31
     if (value[0] === '3' && value[1] > '1') {
-      return value[0] + this.padMonth(value[1]);
+      return '0' + value[0] + '0' + value[1];
     }
     return value;
   }
@@ -127,42 +125,24 @@ export class DateParserDirective {
   private DateCorrection(value: string): string {
     // Take Full Length of DD/MM/YYYY and correct the date Days of the month and handle leap year
     var MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    var Day = parseInt(value.substring(0, 2));
-    var Month = parseInt(value.substring(2, 4));
-    var Year = parseInt(value.substring(4, 8));
-    // Handle Missing Values
-    if (isNaN(Day) || Day === 0) {
-      Day = 1;
-    }
-    if (isNaN(Month) || Month === 0) {
-      Month = new Date().getMonth();
-    }
-    if (isNaN(Year) || Year === 0) {
-      Year = new Date().getFullYear();
-    }
-    if (Day === 0) {
-      Day = 1;
-    }
-    // Handle unCorrect Values
-    // Leap Days
+    var Day = Math.max(1, parseInt(value.substring(0, 2)) || 1);
+    var Month = Math.max(
+      1,
+      Math.min(12, parseInt(value.substring(2, 4)) || new Date().getMonth())
+    );
+    var Year = Math.max(
+      this.minYear,
+      Math.min(
+        this.maxYear,
+        parseInt(value.substring(4, 8)) || new Date().getFullYear()
+      )
+    );
+
+    // Leap Days Fix
     if (Year > this.minYear) {
       if (this.isLeapYear(Year)) {
         MonthDays[1] = 29;
       }
-    }
-    // Handle Day if Exceed
-    if (Day > MonthDays[Month - 1]) {
-      Day = MonthDays[Month - 1];
-    }
-    // Handle Months if Exceed
-    if (Month > 12) {
-      Month = 12;
-    }
-    if (Year < this.minYear) {
-      Year = this.minYear;
-    }
-    if (Year > this.maxYear) {
-      Year = this.maxYear;
     }
     return (
       this.padDay(Day.toString().padStart(2, '0')) +
@@ -176,25 +156,25 @@ export class DateParserDirective {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
   }
 
-  //   isInvalidDate(value: string): boolean {
-  //     // Split and Proper Pad the Splited Values
-  //     let parts = value.split('/');
-  //     let Day = parts[0];
-  //     let Month = parts[1];
-  //     let Year = parts[2];
-  //     if (
-  //       isNaN(parseInt(Day)) ||
-  //       parseInt(Day) == 0 ||
-  //       isNaN(parseInt(Month)) ||
-  //       parseInt(Month) == 0 ||
-  //       isNaN(parseInt(Year)) ||
-  //       parseInt(Year) == 0 ||
-  //       value.length < 10
-  //     ) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
+    isInvalidDate(value: string): boolean {
+      // Split and Proper Pad the Splited Values
+      let parts = value.split('/');
+      let Day = parts[0];
+      let Month = parts[1];
+      let Year = parts[2];
+      if (
+        isNaN(parseInt(Day)) ||
+        parseInt(Day) == 0 ||
+        isNaN(parseInt(Month)) ||
+        parseInt(Month) == 0 ||
+        isNaN(parseInt(Year)) ||
+        parseInt(Year) == 0 ||
+        value.length < 10
+      ) {
+        return true;
+      }
+      return false;
+    }
   //   @HostListener('ngModelChange', ['$event'])
   //   onModelChange(event: any) {
   //     this.onInputChange(event, false);
