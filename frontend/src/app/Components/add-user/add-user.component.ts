@@ -12,6 +12,7 @@ import { ApiService } from '../../Services/fake-data-service.service';
 import { HttpParams } from '@angular/common/http';
 import { UniqueValidatorDirective } from '../../customeDirectives/unique-validator';
 import { emailAsyncValidator } from '../../customValidations/unique-email-validator';
+import { DateParserDirective } from '../../customeDirectives/date-directive';
 
 @Component({
   selector: 'app-add-user',
@@ -22,6 +23,7 @@ import { emailAsyncValidator } from '../../customValidations/unique-email-valida
     FormsModule,
     ReactiveFormsModule,
     UniqueValidatorDirective,
+    DateParserDirective,
   ],
   styleUrls: ['./add-user.component.scss'],
 })
@@ -50,6 +52,7 @@ export class AddUserComponent implements OnInit {
       userId: [this.userId],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
+      birthDate: ['', []],
       email: [
         '',
         {

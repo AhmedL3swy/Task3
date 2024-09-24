@@ -40,7 +40,33 @@
       </small>
     </div>
   </div>
-
+  <!-- BirthDate -->
+  <div class="form-group">
+    <label for="birthDate">Birth Date:</label>
+    <input
+      id="birthDate"
+      formControlName="birthDate"
+      class="form-control"
+      DateParser [minYear]="1850" [maxYear]="2030"
+    />
+    <div
+      *ngIf="
+        f['birthDate'].invalid &&
+        (f['birthDate'].dirty || f['birthDate'].touched)
+      "
+    >
+    <!-- invalidDate -->
+      <small *ngIf="f['birthDate'].errors?.['invalidDate']" class="text-danger">
+        Invalid date format. Must be in the format dd/mm/yyyy.
+      </small>
+      <small *ngIf="f['birthDate'].errors?.['required']" class="text-danger">
+        Birth date is required.
+      </small>
+      <small *ngIf="f['birthDate'].errors?.['serverError']" class="text-danger">
+        {{ f['birthDate'].errors?.['serverError'] }}
+      </small>
+    </div>
+  </div>
   <!-- Email -->
   <div class="form-group">
     <label for="email">Email:</label>
@@ -50,9 +76,9 @@
         Email is required.
       </small>
       <!-- notUnique -->
-        <small *ngIf="f['email'].errors?.['emailTaken']" class="text-danger">
-            Email is already taken.
-        </small>
+      <small *ngIf="f['email'].errors?.['emailTaken']" class="text-danger">
+        Email is already taken.
+      </small>
       <small *ngIf="f['email'].errors?.['email']" class="text-danger">
         Invalid email format.
       </small>
@@ -65,16 +91,23 @@
   <!-- Mobile -->
   <div class="form-group">
     <label for="mobile">Mobile:</label>
-    <input id="mobile" formControlName="mobile" class="form-control" UniqueValidator [propertyName]="'Mobile'" [userId]="userId ? userId : '0'" />
+    <input
+      id="mobile"
+      formControlName="mobile"
+      class="form-control"
+      UniqueValidator
+      [propertyName]="'Mobile'"
+      [userId]="userId ? userId : '0'"
+    />
     <div
       *ngIf="f['mobile'].invalid && (f['mobile'].dirty || f['mobile'].touched)"
     >
       <small *ngIf="f['mobile'].errors?.['required']" class="text-danger">
         Mobile is required.
       </small>
-       <small *ngIf="f['mobile'].errors?.['notUnique']" class="text-danger">
-            Mobile is already taken.
-        </small>
+      <small *ngIf="f['mobile'].errors?.['notUnique']" class="text-danger">
+        Mobile is already taken.
+      </small>
       <small *ngIf="f['mobile'].errors?.['pattern']" class="text-danger">
         Invalid mobile format. Must start with 05 and be 10 digits long.
       </small>
@@ -91,7 +124,9 @@
       id="municipalNo"
       formControlName="municipalNo"
       class="form-control"
-      UniqueValidator [propertyName]="'MunicipalNo'" [userId]="userId ? userId : '0'"
+      UniqueValidator
+      [propertyName]="'MunicipalNo'"
+      [userId]="userId ? userId : '0'"
     />
     <div
       *ngIf="
@@ -102,9 +137,9 @@
       <small *ngIf="f['municipalNo'].errors?.['required']" class="text-danger">
         Municipal number is required.
       </small>
-       <small *ngIf="f['municipalNo'].errors?.['notUnique']" class="text-danger">
-            municipalNo is already taken.
-        </small>
+      <small *ngIf="f['municipalNo'].errors?.['notUnique']" class="text-danger">
+        municipalNo is already taken.
+      </small>
       <small *ngIf="f['municipalNo'].errors?.['pattern']" class="text-danger">
         Invalid municipal number format. Must be 6-10 digits long.
       </small>
@@ -120,8 +155,14 @@
   <!-- National ID -->
   <div class="form-group">
     <label for="nationalId">National ID:</label>
-    <input id="nationalId" formControlName="nationalId" class="form-control" UniqueValidator [propertyName]="'NationalId'" [userId]="userId ? userId : '0'"
-  />
+    <input
+      id="nationalId"
+      formControlName="nationalId"
+      class="form-control"
+      UniqueValidator
+      [propertyName]="'NationalId'"
+      [userId]="userId ? userId : '0'"
+    />
     <div
       *ngIf="
         f['nationalId'].invalid &&
@@ -131,9 +172,9 @@
       <small *ngIf="f['nationalId'].errors?.['required']" class="text-danger">
         National ID is required.
       </small>
-       <small *ngIf="f['nationalId'].errors?.['notUnique']" class="text-danger">
-            NationalID is already taken.
-        </small>
+      <small *ngIf="f['nationalId'].errors?.['notUnique']" class="text-danger">
+        NationalID is already taken.
+      </small>
       <small *ngIf="f['nationalId'].errors?.['pattern']" class="text-danger">
         Invalid national ID format. Must be 10 digits long.
       </small>
@@ -189,14 +230,9 @@
     ></textarea>
   </div>
 
-  <div class="row mt-3" >
+  <div class="row mt-3">
     <div class="col-10">
-      <button
-        type="submit"
-        class="btn btn-primary"
-      >
-        Submit
-      </button>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </div>
     <div class="col-2">
       <button class="btn btn-dark" (click)="back()">Back</button>
