@@ -19,6 +19,7 @@
     "address": "العنوان",
     "municipalNo": "رقم التوظيف",
     "nationalId": "رقم الهوية",
-    "maritalStatus": "الحالة الاجتماعية"
+    "maritalStatus": "الحالة الاجتماعية",
+    "birthDate":"تاريخ الميلاد"
   }
 }

@@ -56,6 +56,11 @@ export class GridContainerComponent {
         sortable: true,
       },
       {
+        header: 'headers.birthDate',
+        field: 'birthDate',
+        sortable: true,
+      },
+      {
         header: 'headers.email',
         field: 'email',
         sortable: false,

@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, viewChild } from '@angular/core';
+import { formatDate } from '@angular/common';
+
 import {
   FormBuilder,
   FormGroup,
@@ -13,6 +15,9 @@ import { HttpParams } from '@angular/common/http';
 import { UniqueValidatorDirective } from '../../customeDirectives/unique-validator';
 import { emailAsyncValidator } from '../../customValidations/unique-email-validator';
 import { DateParserDirective } from '../../customeDirectives/date-directive';
+import moment from 'moment';
+import { DateParserDirective2 } from '../../customeDirectives/date2';
+import { DateParserDirective3 } from '../../customeDirectives/date-directive2';
 
 @Component({
   selector: 'app-add-user',
@@ -24,11 +29,20 @@ import { DateParserDirective } from '../../customeDirectives/date-directive';
     ReactiveFormsModule,
     UniqueValidatorDirective,
     DateParserDirective,
+    DateParserDirective2,
+    DateParserDirective3,
   ],
   styleUrls: ['./add-user.component.scss'],
 })
 export class AddUserComponent implements OnInit {
   userForm!: FormGroup;
+  @ViewChild('birthDate') birthDate!: ElementRef;
+  @ViewChild('secondDate') secondDate!: ElementRef;
+  birthDatee: string | null = null;
+
+  onDateChange(event: any) {
+    // Format the input value to 'dd/MM/yyyy'
+  }
   maritalStatusOptions: any = [
     { id: 1, name: 'Single' },
     { id: 2, name: 'Married' },
@@ -49,10 +63,10 @@ export class AddUserComponent implements OnInit {
   ngOnInit(): void {
     // Initialize form
     this.userForm = this.fb.group({
-      userId: [this.userId],
+      id: [this.userId],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      birthDate: ['', []],
+      birthDate: ['', [Validators.required]],
       email: [
         '',
         {
@@ -101,8 +115,16 @@ export class AddUserComponent implements OnInit {
   // Load user details for editing
   loadUserDetails(userId: string): void {
     this.dataService.getEntityById(`${this.apiUrl}/GetUser`, userId).subscribe(
-      (user) => {
+      (user: any) => {
         this.userForm.patchValue(user);
+        this.userId = user.id;
+
+        const formattedDate = formatDate(
+          this.userForm.get('birthDate')?.value,
+          'dd/MM/yyyy',
+          'en-US'
+        );
+        this.userForm.get('birthDate')?.setValue(formattedDate);
       },
       (err) => {
         console.error('Error loading user details', err);
@@ -154,6 +176,23 @@ export class AddUserComponent implements OnInit {
     } else {
       this.userForm.markAllAsTouched();
     }
+  }
+  checkDate() {
+    // log form values
+    console.log(this.userForm.value);
+    // const birthDate = this.birthDate.nativeElement.value;
+    //const secondDate = this.secondDate.nativeElement.value;
+    // const date = new Date(secondDate);
+    // const momentDate = moment(date);
+    // const formattedDate = momentDate.format('DD/MM/YYYY');
+    // let angularFormattedDate = '';
+    // if (!isNaN(Date.parse(secondDate))) {
+    //   angularFormattedDate = formatDate(secondDate, 'dd/MM/yyyy', 'en-US');
+    // }
+
+    // console.log('Moment.js formatted date:', formattedDate);
+    // console.log('birthDate:', birthDate);
+    // console.log('SecondDate:', angularFormattedDate);
   }
 
   // Adds server-side validation errors to the form controls

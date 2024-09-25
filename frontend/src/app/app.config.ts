@@ -2,6 +2,7 @@ import {
   ApplicationConfig,
   importProvidersFrom,
   provideZoneChangeDetection,
+  LOCALE_ID,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -23,14 +24,14 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     importProvidersFrom([
       TranslateModule.forRoot({
-        defaultLanguage:'en',
+        defaultLanguage: 'en',
         loader: {
-        
           provide: TranslateLoader,
           useFactory: httpLoaderFactory,
           deps: [HttpClient],
         },
       }),
     ]),
+    { provide: LOCALE_ID, useValue: 'en-us' },
   ],
 };

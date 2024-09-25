@@ -7,22 +7,49 @@ import { min } from 'rxjs';
 })
 export class DateParserDirective {
   constructor(private el: ElementRef, private control: NgControl) {
-    this.el.nativeElement.style.userSelect = 'none';
+
   }
+
   // Input Min and Max Year
   @Input() minYear: number = 1200;
   @Input() maxYear: number = new Date().getFullYear();
   lastInput: string = '';
+  moreThanOne: boolean = false;
+  segmentIndex: number = 0; // 0 for day, 1 for month, 2 for year
+
+  @HostListener('select', ['$event'])
+  onSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    // console.log(event);
+    // If More than 1 character selected, then select all to the next /
+    if (
+      input.selectionEnd !== null &&
+      input.selectionStart !== null &&
+      input.selectionEnd - input.selectionStart > 1
+    ) {
+      this.moreThanOne = true;
+      return;
+    }
+  }
 
   // Main Functionality
+
   @HostListener('input', ['$event']) onInput(event: any) {
     const value = this.el.nativeElement.value;
+    if (value.length > 10) {
+      this.el.nativeElement.value = this.lastInput;
+      return;
+    }
     const parsedDate = this.parseDate(value);
-    // console.log(event);
     // Access the input key via event.key
     const inputKey = event.data;
 
-    // Handle Deleting by Clearing the Value
+    if (this.moreThanOne) {
+      this.moreThanOne = false;
+      this.el.nativeElement.value = this.lastInput;
+      return;
+    }
+    //Handle Deleting by Clearing the Value
     if (this.isDeleting(value)) {
       this.lastInput = '';
       this.el.nativeElement.value = inputKey;
@@ -32,6 +59,7 @@ export class DateParserDirective {
     // Save Last Input
     this.lastInput = parsedDate;
     this.el.nativeElement.value = parsedDate;
+    this.control.control?.setValue(parsedDate);
   }
 
   // HostListener for backspace and delete
@@ -62,17 +90,19 @@ export class DateParserDirective {
     const parsed = value.replace(/\D/g, '');
     const nparsed = this.DateCorrection(parsed);
     this.el.nativeElement.value = nparsed;
-
-    if (this.isInvalidDate(value)) {
-      this.control.control?.setErrors({ invalidDate: true });
-      return;
-    } else {
-      const errors = this.control.control?.errors;
-      if (errors) {
-        delete errors['invalidDate'];
-        this.control.control?.setErrors({ ...errors });
-      }
-    }
+    // set the control value
+    this.control.control?.setValue(nparsed);
+    // Set Error to Controller
+    // if (this.isInvalidDate(value)) {
+    //   this.control.control?.setErrors({ invalidDate: true });
+    //   return;
+    // } else {
+    //   const errors = this.control.control?.errors;
+    //   if (errors) {
+    //     delete errors['invalidDate'];
+    //     this.control.control?.setErrors({ ...errors });
+    //   }
+    // }
   }
   isDeleting(value: string): boolean {
     if (this.lastInput == '') return false;
@@ -112,7 +142,7 @@ export class DateParserDirective {
       return '0' + value[0];
     }
     if (value[0] === '3' && value[1] > '1') {
-      return '0' + value[0] + this.padMonth(value[1]);
+      return '0' + value[0] + '0' + value[1];
     }
     return value;
   }
@@ -121,7 +151,7 @@ export class DateParserDirective {
       return '0' + value[0];
     }
     if (value[0] === '1' && value[1] > '2') {
-      return value[0] + this.padYear(value[1]);
+      return '0' + value[0] + this.padYear(value[1]);
     }
     return value;
   }
@@ -148,10 +178,13 @@ export class DateParserDirective {
   private DateCorrection(value: string): string {
     // Take Full Length of DD/MM/YYYY and correct the date Days of the month and handle leap year
     var MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    var Day = Math.max(1, parseInt(value.substring(0, 2)) || 1);
+    var Day = Math.max(
+      1,
+      parseInt(value.substring(0, 2)) || new Date().getDate()
+    );
     var Month = Math.max(
       1,
-      Math.min(12, parseInt(value.substring(2, 4)) || new Date().getMonth())
+      Math.min(12, parseInt(value.substring(2, 4)) || new Date().getMonth() + 1)
     );
     var Year = Math.max(
       this.minYear,
@@ -171,7 +204,7 @@ export class DateParserDirective {
     if (Day > MonthDays[Month - 1]) {
       Day = MonthDays[Month - 1];
     }
-    
+
     return (
       this.padDay(Day.toString().padStart(2, '0')) +
       '/' +
@@ -233,4 +266,73 @@ export class DateParserDirective {
   //       this.control.valueAccessor.writeValue(newVal);
   //     }
   //   }
+
+  // @HostListener('select', ['$event'])
+  // onSelect(event: any) {
+  //   const input = this.el.nativeElement.value;
+  //   const selectionStart = this.el.nativeElement.selectionStart;
+  //   if (selectionStart < 3) {
+  //     this.segmentIndex = 0; // Select day
+  //   } else if (selectionStart < 6) {
+  //     this.segmentIndex = 1; // Select month
+  //   } else {
+  //     this.segmentIndex = 2; // Select year
+  //   }
+  //   this.preventCrossSelection();
+  // }
+  // private preventCrossSelection() {
+  //   const input = this.el.nativeElement;
+  //   if (this.segmentIndex === 0 && input.selectionEnd > 2) {
+  //     input.selectionStart = 0;
+  //     input.selectionEnd = 2;
+  //   } else if (this.segmentIndex === 1 && input.selectionEnd > 5) {
+  //     input.selectionStart = 3;
+  //     input.selectionEnd = 5;
+  //   } else if (this.segmentIndex === 2 && input.selectionEnd > 10) {
+  //     input.selectionStart = 6;
+  //     input.selectionEnd = 10;
+  //   }
+  // }
+  // if (this.moreThanOne) {
+  //   // Parse the input Key only in the segment with padding while leaving the others
+  //   // if (this.segmentIndex === 0) {
+  //   //   // Make Correction with replacing the first 2 characters of lastinput with padded inputKey
+  //   //   // split by / and replace the first segment with padded inputKey
+  //   //   const newVal = this.lastInput.split('/')[0].replace(
+  //   //     /(\d{0,2})/,
+  //   //    this.padDay(inputKey)
+  //   //   );
+  //   //   this.el.nativeElement.value = this.DateCorrection(newVal);
+  //   // } else if (this.segmentIndex === 1) {
+  //   //   this.el.nativeElement.value = this.padMonth(inputKey);
+  //   // } else {
+  //   //   this.el.nativeElement.value = this.padYear(inputKey);
+  //   // }
+  // }
+  // @HostListener('input', ['$event'])
+  // onInput(event: any) {
+  //   const input = this.el.nativeElement.value.replace(/\D/g, '');
+  //   if (input.length <= 2) {
+  //     this.segmentIndex = 0; // Day segment
+  //   } else if (input.length <= 4) {
+  //     this.segmentIndex = 1; // Month segment
+  //   } else {
+  //     this.segmentIndex = 2; // Year segment
+  //   }
+  //   const parsedDate = this.parseDate(input);
+  //   this.el.nativeElement.value = parsedDate;
+  // }
+  // private parseDate(value: string): string {
+  //   if (!value || value === '' ) {
+  //     return value;
+  //   }
+  //   if (value.length <= 2) {
+  //     return value.replace(/^(\d{0,2})/, '$1/');
+  //   }
+  //   if (value.length <= 4) {
+  //     return value.replace(/^(\d{0,2})(\d{0,2})/, '$1/$2/');
+  //   }
+  //   return value.substring(0, 8).replace(/^(\d{0,2})(\d{0,2})(\d{0,4})/, '$1/$2/$3');
+  // }
+  // Allow click to activate element
 }

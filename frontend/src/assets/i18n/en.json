@@ -19,7 +19,8 @@
     "address": "Address",
     "municipalNo": "Municipal Number",
     "nationalId": "National ID",
-    "maritalStatus": "Marital Status"
+    "maritalStatus": "Marital Status",
+    "birthDate": "Birth Date"
     
   }
 }
