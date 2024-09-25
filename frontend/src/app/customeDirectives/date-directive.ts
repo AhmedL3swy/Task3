@@ -25,7 +25,7 @@ export class DateParserDirective {
     // Handle Deleting by Clearing the Value
     if (this.isDeleting(value)) {
       this.lastInput = '';
-      this.el.nativeElement.value=inputKey
+      this.el.nativeElement.value = inputKey;
       return;
     }
 
@@ -40,7 +40,10 @@ export class DateParserDirective {
     const value = this.el.nativeElement.value;
     if (event.key === 'Backspace' || event.key === 'Delete') {
       event.preventDefault();
-      this.el.nativeElement.value = value.substring(0, value.length - 1);
+      this.lastInput = this.el.nativeElement.value = value.substring(
+        0,
+        value.length - 1
+      );
     }
     // if key is /
     if (event.key === '/') {
@@ -109,7 +112,7 @@ export class DateParserDirective {
       return '0' + value[0];
     }
     if (value[0] === '3' && value[1] > '1') {
-      return '0' + value[0]+this.padMonth(value[1])
+      return '0' + value[0] + this.padMonth(value[1]);
     }
     return value;
   }
@@ -164,6 +167,11 @@ export class DateParserDirective {
         MonthDays[1] = 29;
       }
     }
+    // Pervent Day to be more than its month
+    if (Day > MonthDays[Month - 1]) {
+      Day = MonthDays[Month - 1];
+    }
+    
     return (
       this.padDay(Day.toString().padStart(2, '0')) +
       '/' +
