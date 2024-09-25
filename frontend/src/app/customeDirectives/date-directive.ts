@@ -7,18 +7,33 @@ import { min } from 'rxjs';
 })
 export class DateParserDirective {
   constructor(private el: ElementRef, private control: NgControl) {
-     this.el.nativeElement.style.userSelect = 'none';
+    this.el.nativeElement.style.userSelect = 'none';
   }
   // Input Min and Max Year
   @Input() minYear: number = 1200;
   @Input() maxYear: number = new Date().getFullYear();
+  lastInput: string = '';
 
   // Main Functionality
-  @HostListener('input') onInput() {
+  @HostListener('input', ['$event']) onInput(event: any) {
     const value = this.el.nativeElement.value;
     const parsedDate = this.parseDate(value);
+    // console.log(event);
+    // Access the input key via event.key
+    const inputKey = event.data;
+
+    // Handle Deleting by Clearing the Value
+    if (this.isDeleting(value)) {
+      this.lastInput = '';
+      this.el.nativeElement.value=inputKey
+      return;
+    }
+
+    // Save Last Input
+    this.lastInput = parsedDate;
     this.el.nativeElement.value = parsedDate;
   }
+
   // HostListener for backspace and delete
   @HostListener('keydown', ['$event'])
   keydown(event: KeyboardEvent) {
@@ -56,7 +71,12 @@ export class DateParserDirective {
       }
     }
   }
-
+  isDeleting(value: string): boolean {
+    if (this.lastInput == '') return false;
+    return (
+      value.replace(/\D/g, '').length < this.lastInput.replace(/\D/g, '').length
+    );
+  }
   parseDate(date: string): string {
     if (!date || date === '') {
       return date;
@@ -89,7 +109,7 @@ export class DateParserDirective {
       return '0' + value[0];
     }
     if (value[0] === '3' && value[1] > '1') {
-      return '0' + value[0] + '0' + value[1];
+      return '0' + value[0]+this.padMonth(value[1])
     }
     return value;
   }
@@ -156,25 +176,25 @@ export class DateParserDirective {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
   }
 
-    isInvalidDate(value: string): boolean {
-      // Split and Proper Pad the Splited Values
-      let parts = value.split('/');
-      let Day = parts[0];
-      let Month = parts[1];
-      let Year = parts[2];
-      if (
-        isNaN(parseInt(Day)) ||
-        parseInt(Day) == 0 ||
-        isNaN(parseInt(Month)) ||
-        parseInt(Month) == 0 ||
-        isNaN(parseInt(Year)) ||
-        parseInt(Year) == 0 ||
-        value.length < 10
-      ) {
-        return true;
-      }
-      return false;
+  isInvalidDate(value: string): boolean {
+    // Split and Proper Pad the Splited Values
+    let parts = value.split('/');
+    let Day = parts[0];
+    let Month = parts[1];
+    let Year = parts[2];
+    if (
+      isNaN(parseInt(Day)) ||
+      parseInt(Day) == 0 ||
+      isNaN(parseInt(Month)) ||
+      parseInt(Month) == 0 ||
+      isNaN(parseInt(Year)) ||
+      parseInt(Year) == 0 ||
+      value.length < 10
+    ) {
+      return true;
     }
+    return false;
+  }
   //   @HostListener('ngModelChange', ['$event'])
   //   onModelChange(event: any) {
   //     this.onInputChange(event, false);
