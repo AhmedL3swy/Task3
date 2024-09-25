@@ -27,5 +27,7 @@ namespace DataGrid.Application.Features.Users.Command.EditUser
         public string Address { get; set; }
 
         public int MaritalStatusId { get; set; }
+
+        public string BirthDate { get; set; }
     }
 }

@@ -32,6 +32,8 @@ namespace DataGrid.Domain
 
         //public MaritalStatusEnum MaritalStatus { get; set; }
 
+        public DateOnly? BirthDate { get; set; }
+
         public string Address { get; set; }
 
         // Navigation property to MaritalStatus

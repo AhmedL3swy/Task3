@@ -33,5 +33,7 @@ namespace DataGrid.Application.Features.Users.Query
         public string Address { get; set; }
 
         public string MaritalStatus { get; set; }
+
+        public DateOnly? BirthDate { get; set; }
     }
 }
