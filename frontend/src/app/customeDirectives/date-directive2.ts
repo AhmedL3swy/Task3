@@ -31,6 +31,7 @@ export class DateParserDirective3 {
   @Input() maxYear: number = new Date().getFullYear();
   @Input() autoComplete: boolean = true;
   @Input() addValidation: boolean = true;
+  @Input() autoCorrecting: boolean = true;
 
   constructor(private el: ElementRef, private control: NgControl) {}
 
@@ -69,7 +70,10 @@ export class DateParserDirective3 {
       return 'Invalid Date';
     }
     if (this.addValidation) {this.removeValidationErrors();}
-    return this.DateCorrection(paddedDate);
+    if (this.autoCorrecting) {
+      return this.DateCorrection(paddedDate);
+    }
+    return paddedDate;
   }
 
   /**
