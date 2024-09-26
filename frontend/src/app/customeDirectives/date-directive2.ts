@@ -191,9 +191,24 @@ export class DateParserDirective3 {
         return;
       }
     }
+    // handle to limit of 8 digits
+    if (sanitizedValue.replace(/\D/g, '').length > 8) {
+      this.el.nativeElement.value = this.lastValue;
+      return;
+    }
     this.lastValue = sanitizedValue;
     this.el.nativeElement.value = sanitizedValue;
   }
 
   // #endregion
+  // # region click 
+  @HostListener('click')
+  onClick() {
+    // this.el.nativeElement.select();
+    // remove the invalid date error
+    if (this.el.nativeElement.value=='Invalid Date') {
+      this.el.nativeElement.value = '';
+    }
+  }
+
 }
