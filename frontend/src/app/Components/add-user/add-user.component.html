@@ -53,9 +53,12 @@
       [minYear]="1900"
       [maxYear]="2005"
       [(ngModel)]="birthDatee"
+      [autoComplete]="false"
+      [addValidation]="true"
       (ngModelChange)="onDateChange($event)"
 
     />
+
     <div
       *ngIf="
         f['birthDate'].invalid &&
@@ -84,9 +87,9 @@
       "
     >
       <!-- invalidDate -->
-      <small *ngIf="f['birthDate'].errors?.['invalidDate']" class="text-danger">
+      <!-- <small *ngIf="f['birthDate'].errors?.['invalidDate']" class="text-danger">
         Invalid date format. Must be in the format dd/mm/yyyy.
-      </small>
+      </small> -->
       <small *ngIf="f['birthDate'].errors?.['required']" class="text-danger">
         Birth date is required.
       </small>
