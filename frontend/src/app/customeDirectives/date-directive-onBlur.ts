@@ -182,11 +182,10 @@ export class DateParserDirective {
 
   private formatDateContainingSlash(value: string): string {
     const segments = value.split('/');
-    return (
-      segments[0].padStart(2, '0') +
-      segments[1].padStart(2, '0') +
-      segments[2].padStart(4, '0')
-    );
+    const day = segments[0] ? segments[0].padStart(2, '0') : '00';
+    const month = segments[1] ? segments[1].padStart(2, '0') : '00';
+    const year = segments[2] ? segments[2].padStart(4, '0') : '0000';
+    return day + month + year;
   }
 
   // #endregion
