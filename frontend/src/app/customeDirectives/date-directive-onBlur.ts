@@ -2,6 +2,7 @@ import { formatDate } from '@angular/common';
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import e from 'express';
+import { parse } from 'path';
 
 /**
  * Directive that automatically formats and validates date input fields.
@@ -95,6 +96,7 @@ export class DateParserDirective {
    */
   private AutoCompleteDate(value: string): string {
     const corrected = this.PadintoDate(value);
+    console.log(corrected);
     const paddedDate = corrected.padEnd(8, '0'); // Pad remaining digits with '0'
     return this.DateCorrection(paddedDate);
   }
@@ -180,7 +182,11 @@ export class DateParserDirective {
 
   private formatDateContainingSlash(value: string): string {
     const segments = value.split('/');
-    return segments.map((segment: string) => segment.padStart(2, '0')).join('');
+    return (
+      segments[0].padStart(2, '0') +
+      segments[1].padStart(2, '0') +
+      segments[2].padStart(4, '0')
+    );
   }
 
   // #endregion
@@ -195,12 +201,12 @@ export class DateParserDirective {
    */
   private DateCorrection(value: string): string {
     // if not Valid Date return Invalid Date
-
     let MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    let Day = parseInt(value.substring(0, 2)) || new Date().getDate();
-    let Month = parseInt(value.substring(2, 4)) || new Date().getMonth() + 1;
-    let Year = parseInt(value.substring(4, 8)) || new Date().getFullYear();
-
+    let Day = parseInt(value.substring(0, 2), 10) || new Date().getDate();
+    let Month =
+      parseInt(value.substring(2, 4), 10) || new Date().getMonth() + 1;
+    let Year = parseInt(value.substring(4, 8), 10) || new Date().getFullYear();
+    console.log(Year);
     if ((Year % 4 === 0 && Year % 100 !== 0) || Year % 400 === 0) {
       MonthDays[1] = 29; // Adjust for leap year
     }
