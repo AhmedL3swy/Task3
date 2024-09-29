@@ -22,15 +22,19 @@ import { HttpParams } from '@angular/common/http';
 import { UniqueValidatorDirective } from '../../customeDirectives/unique-validator';
 import { emailAsyncValidator } from '../../customValidations/unique-email-validator';
 import { DateParserDirective } from '../../customeDirectives/date-directive-onBlur';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import moment from 'moment';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
   standalone: true,
   imports: [
+    TooltipModule,
     CommonModule,
     FormsModule,
+    BsDatepickerModule,
     ReactiveFormsModule,
     UniqueValidatorDirective,
     DateParserDirective,
@@ -43,7 +47,7 @@ export class AddUserComponent implements OnInit {
   @ViewChild('secondDate') secondDate!: ElementRef;
   birthDatee: string | null = null;
   minDate = new Date(2000, 0, 1);
-  maxDate = new Date(2030,0,1);
+  maxDate = new Date(2030, 0, 1);
 
   onDateChange(event: any) {
     // Format the input value to 'dd/MM/yyyy'

@@ -49,8 +49,10 @@
       placeholder="dd/mm/yyyy"
       class="form-control"
       DateParser
-      [min]="minDate"
-      [max]="maxDate"
+      bsDatepicker
+      [minDate]="minDate"
+      [maxDate]="maxDate"
+      [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
     />
 
     <div

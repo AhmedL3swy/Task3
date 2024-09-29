@@ -28,8 +28,8 @@ export class DateParserDirective {
   lastValue: string = ''; // Stores the last valid value of the input
 
   // Input properties for customization
-  @Input() min: Date = new Date(1900, 0, 1);
-  @Input() max: Date = new Date();
+  @Input() minDate: Date = new Date(1900, 0, 1);
+  @Input() maxDate: Date = new Date();
   @Input() addValidation: boolean = true;
 
   constructor(private el: ElementRef, private control: NgControl) {}
@@ -209,11 +209,11 @@ export class DateParserDirective {
 
     let currentDate = new Date(Year, Month - 1, Day);
     // Insure Max Year and Min Year
-    if (currentDate > this.max) {
-      currentDate = this.max;
+    if (currentDate > this.maxDate) {
+      currentDate = this.maxDate;
     }
-    if (currentDate < this.min) {
-      currentDate = this.min;
+    if (currentDate < this.minDate) {
+      currentDate = this.minDate;
     }
     Day = currentDate.getDate();
     Month = currentDate.getMonth() + 1;
