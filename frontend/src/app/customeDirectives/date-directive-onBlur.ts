@@ -59,6 +59,10 @@ export class DateParserDirective {
     let paddedDate = '';
     // Speacial Treatment for Date Containing Slash to handle Edit/Delete Operations
     if (value.includes('/')) {
+      // if / in the end remove it 
+      if (value[value.length - 1] == '/') {
+        value = value.slice(0, -1);
+      }
       paddedDate = this.formatDateContainingSlash(value);
     }
     // Main Logic for Date Conversion
@@ -166,7 +170,6 @@ export class DateParserDirective {
       value =
         day.padStart(2, '0') + month.padStart(2, '0') + year.padStart(4, '0');
     }
-    console.log(value);
     return value;
   }
   private getMonthMaxDay(month: number = new Date().getMonth() + 1): number {
@@ -176,9 +179,6 @@ export class DateParserDirective {
 
   private formatDateContainingSlash(value: string): string {
     const segments = value.split('/');
-    console.log(
-      segments.map((segment: string) => segment.padStart(2, '0')).join('')
-    );
     return segments.map((segment: string) => segment.padStart(2, '0')).join('');
   }
 
@@ -194,7 +194,6 @@ export class DateParserDirective {
    */
   private DateCorrection(value: string): string {
     // if not Valid Date return Invalid Date
-    console.log('Date Correction', value);
 
     let MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     let Day = parseInt(value.substring(0, 2)) || new Date().getDate();
@@ -353,7 +352,6 @@ export class DateParserDirective {
     if (value[2] > '1') {
       value = value.slice(0, 2) + '0' + value.slice(2);
     }
-    console.log(value);
     return value;
   }
   //#endregion
