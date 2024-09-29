@@ -59,7 +59,7 @@ export class DateParserDirective {
     let paddedDate = '';
     // Speacial Treatment for Date Containing Slash to handle Edit/Delete Operations
     if (value.includes('/')) {
-      // if / in the end remove it 
+      // if / in the end remove it
       if (value[value.length - 1] == '/') {
         value = value.slice(0, -1);
       }
@@ -329,30 +329,4 @@ export class DateParserDirective {
   }
   // #endregion
 
-  //#region oldwork
-  private formatDate(value: string): string {
-    // Handle d/m format if given only d and m
-    // length 2 ex : 42 or 12
-
-    // Length 3 ex:111
-    if (value[0] > '3' && value.length == 3) {
-      return (value = '0' + value.slice(0, 1) + value.slice(1));
-    }
-    //Length 6 dmyyyyy 122000 or 252000
-    if (value[0] <= '3' && value.length == 6) {
-      value = '0' + value.slice(0, 1) + '0' + value.slice(1);
-    }
-
-    if (value[0] > '3') {
-      value = '0' + value.slice(1);
-    }
-    if (value[2] == '1' && value.length == 7) {
-      value = value.slice(0, 2) + '0' + value.slice(2);
-    }
-    if (value[2] > '1') {
-      value = value.slice(0, 2) + '0' + value.slice(2);
-    }
-    return value;
-  }
-  //#endregion
 }
