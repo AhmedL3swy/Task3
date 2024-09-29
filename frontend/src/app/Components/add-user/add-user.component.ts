@@ -42,6 +42,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   styleUrls: ['./add-user.component.scss'],
 })
 export class AddUserComponent implements OnInit {
+onValueChange($event: Date) {
+  console.log($event);
+}
   userForm!: FormGroup;
   @ViewChild('birthDate') birthDate!: ElementRef;
   @ViewChild('secondDate') secondDate!: ElementRef;

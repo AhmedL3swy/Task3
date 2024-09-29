@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import e from 'express';
 
 /**
  * Directive that automatically formats and validates date input fields.
@@ -26,6 +27,7 @@ import { NgControl } from '@angular/forms';
 })
 export class DateParserDirective {
   lastValue: string = ''; // Stores the last valid value of the input
+  storedValue: string = ''; // Stores the last value of the input to fix Conflict between bsDatepicker and DateParser
 
   // Input properties for customization
   @Input() minDate: Date = new Date(1900, 0, 1);
@@ -40,14 +42,13 @@ export class DateParserDirective {
    * Triggered on blur (when input loses focus).
    * Attempts to convert the entered value into a valid date format.
    */
-  @HostListener('blur')
-  onBlur() {
-    const value = this.el.nativeElement.value;
+  @HostListener('blur', ['$event'])
+  onBlur(event: any) {
+    const value = this.storedValue;
     const converted = this.DateConvertion(value);
     this.el.nativeElement.value = converted;
     this.addValueToControl(converted);
   }
-
   /**
    * Main function to convert input into a valid date format (DD/MM/YYYY).
    * It applies auto-completion and validation.
@@ -238,6 +239,7 @@ export class DateParserDirective {
   @HostListener('input', ['$event'])
   onInput(event: any) {
     const value = this.el.nativeElement.value;
+    this.storedValue = value;
 
     // Sanitize input to allow only numbers and slashes
     const sanitizedValue = value
