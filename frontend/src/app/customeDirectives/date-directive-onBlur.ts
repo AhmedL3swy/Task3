@@ -30,7 +30,6 @@ export class DateParserDirective {
   // Input properties for customization
   @Input() min: Date = new Date(1900, 0, 1);
   @Input() max: Date = new Date();
-  @Input() autoComplete: boolean = true;
   @Input() addValidation: boolean = true;
 
   constructor(private el: ElementRef, private control: NgControl) {}
