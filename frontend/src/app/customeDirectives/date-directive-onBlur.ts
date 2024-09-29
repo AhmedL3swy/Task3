@@ -61,39 +61,26 @@ export class DateParserDirective {
     // Speacial Treatment for Date Containing Slash to handle Edit/Delete Operations
     if (value.includes('/')) {
       paddedDate = this.formatDateContainingSlash(value);
-    } // Main Logic for Date Conversion
+    }
+    // Main Logic for Date Conversion
     else {
       paddedDate = this.PadintoDate(value.replace(/\D/g, ''));
-      console.log('Padded Date', paddedDate);
     }
-    // After Completing the Date Check if the Date is Valid it should be 8 length
-    if (paddedDate.length !== 8) {
+    // Auto-Complete and Correct the Date or Return Invalid Date
+    paddedDate = this.AutoCompleteDate(paddedDate);
+
+    if (paddedDate == 'Invalid Date') {
       if (this.addValidation) {
         this.addValidationErrors();
       }
-      // If the Date is Invalid Return Invalid Date
       return 'Invalid Date';
-    }
-    // If Auto Complete Pad the Rest with '0' and Then Correct the Date
-    if (this.autoComplete) {
-      return this.AutoCompleteDate(paddedDate);
     }
 
     // If the Date is Valid Remove any exisitng Validation Error from last trails
     if (this.addValidation) {
       this.removeValidationErrors();
     }
-    // Correct the Values well to be Proper Date Format and in Range Handle 30/2 etc and be within min/max Date
-    paddedDate = this.DateCorrection(paddedDate);
-    // Format the Date to be in DD/MM/YYYY
-    const formattedDate = paddedDate.replace(
-      /(\d{2})(\d{2})(\d{4})/,
-      '$1/$2/$3'
-    );
-    // After this Check if the Date is Valid to handle unexpected values and return the Date if so..
-    return this.isDateValid(paddedDate.replace(/\D/g, ''))
-      ? formattedDate
-      : 'Invalid Date';
+    return paddedDate;
   }
 
   /**
