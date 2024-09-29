@@ -48,16 +48,9 @@
       formControlName="birthDate"
       placeholder="dd/mm/yyyy"
       class="form-control"
-      (blur)="checkDate()"
-      DateParser3
-      [minYear]="1900"
-      [maxYear]="2005"
-      [(ngModel)]="birthDatee"
-      [autoComplete]="false"
-      [addValidation]="true"
-      [autoCorrecting]="true"
-      (ngModelChange)="onDateChange($event)"
-
+      DateParser
+      [min]="minDate"
+      [max]="maxDate"
     />
 
     <div
@@ -78,7 +71,7 @@
       </small>
     </div>
   </div>
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label for="birthDate">SecondDate:</label>
     <input #secondDate (blur)="checkDate()" class="form-control" type="date" />
     <div
@@ -87,18 +80,18 @@
         (f['birthDate'].dirty || f['birthDate'].touched)
       "
     >
-      <!-- invalidDate -->
-      <!-- <small *ngIf="f['birthDate'].errors?.['invalidDate']" class="text-danger">
+     invalidDate -->
+  <!-- <small *ngIf="f['birthDate'].errors?.['invalidDate']" class="text-danger">
         Invalid date format. Must be in the format dd/mm/yyyy.
       </small> -->
-      <small *ngIf="f['birthDate'].errors?.['required']" class="text-danger">
+  <!-- <small *ngIf="f['birthDate'].errors?.['required']" class="text-danger">
         Birth date is required.
       </small>
       <small *ngIf="f['birthDate'].errors?.['serverError']" class="text-danger">
         {{ f['birthDate'].errors?.['serverError'] }}
-      </small>
-    </div>
-  </div>
+      </small> -->
+  <!-- </div> -->
+  <!-- </div> -->
   <!-- Email -->
   <div class="form-group">
     <label for="email">Email:</label>

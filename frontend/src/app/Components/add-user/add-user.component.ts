@@ -1,5 +1,12 @@
+import { min } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, ElementRef, viewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  viewChild,
+} from '@angular/core';
 import { formatDate } from '@angular/common';
 
 import {
@@ -14,10 +21,8 @@ import { ApiService } from '../../Services/fake-data-service.service';
 import { HttpParams } from '@angular/common/http';
 import { UniqueValidatorDirective } from '../../customeDirectives/unique-validator';
 import { emailAsyncValidator } from '../../customValidations/unique-email-validator';
-import { DateParserDirective } from '../../customeDirectives/date-directive';
+import { DateParserDirective } from '../../customeDirectives/date-directive-onBlur';
 import moment from 'moment';
-import { DateParserDirective2 } from '../../customeDirectives/date2';
-import { DateParserDirective3 } from '../../customeDirectives/date-directive2';
 
 @Component({
   selector: 'app-add-user',
@@ -29,8 +34,6 @@ import { DateParserDirective3 } from '../../customeDirectives/date-directive2';
     ReactiveFormsModule,
     UniqueValidatorDirective,
     DateParserDirective,
-    DateParserDirective2,
-    DateParserDirective3,
   ],
   styleUrls: ['./add-user.component.scss'],
 })
@@ -39,6 +42,8 @@ export class AddUserComponent implements OnInit {
   @ViewChild('birthDate') birthDate!: ElementRef;
   @ViewChild('secondDate') secondDate!: ElementRef;
   birthDatee: string | null = null;
+  minDate = new Date(2000, 0, 1);
+  maxDate = new Date(2030,0,1);
 
   onDateChange(event: any) {
     // Format the input value to 'dd/MM/yyyy'
