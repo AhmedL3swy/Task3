@@ -207,8 +207,6 @@ export class DateParserDirective {
       return 'Invalid Date';
     }
 
-    Month = Math.max(1, Math.min(12, Month)); // Ensure month is valid
-    Day = Math.max(1, Math.min(MonthDays[Month - 1], Day)); // Ensure day is valid for the given month
     let currentDate = new Date(Year, Month - 1, Day);
     // Insure Max Year and Min Year
     if (currentDate > this.max) {
@@ -328,5 +326,4 @@ export class DateParserDirective {
     }
   }
   // #endregion
-
 }
