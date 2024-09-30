@@ -1,8 +1,5 @@
-import { formatDate } from '@angular/common';
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import e from 'express';
-import { parse } from 'path';
 
 /**
  * Directive that automatically formats and validates date input fields.
@@ -59,6 +56,9 @@ export class DateParserDirective {
    */
   private DateConvertion(value: string): string {
     let paddedDate = '';
+    if (this.invalidDate(value)) {
+      return this.invalidHandler();
+    }
     // Speacial Treatment for Date Containing Slash to handle Edit/Delete Operations
     if (value.includes('/')) {
       // if / in the end remove it
@@ -75,10 +75,7 @@ export class DateParserDirective {
     paddedDate = this.AutoCompleteDate(paddedDate);
 
     if (paddedDate == 'Invalid Date') {
-      if (this.addValidation) {
-        this.addValidationErrors();
-      }
-      return 'Invalid Date';
+      return this.invalidHandler();
     }
 
     // If the Date is Valid Remove any exisitng Validation Error from last trails
@@ -86,6 +83,30 @@ export class DateParserDirective {
       this.removeValidationErrors();
     }
     return paddedDate;
+  }
+  invalidDate(value: string) {
+    // return false
+    const regex = new RegExp(
+      [
+        // Start with 00
+        '^00',
+        // start with digit 4-9 then two zeros
+        '|^[4-9]00',
+        // start with /d then three zeros
+        '|^[1-3]000',
+        // 0100
+        '|^0[1-3]00',
+        // end with 0000
+        '|0000$',
+        // start with 0/
+        '|^0/',
+        // have /0/ or /00/
+        '|/0/|/00/',
+        // end with /0 or /00
+        '|/0$|/00$',
+      ].join('')
+    );
+    return regex.test(value);
   }
 
   /**
@@ -96,7 +117,6 @@ export class DateParserDirective {
    */
   private AutoCompleteDate(value: string): string {
     const corrected = this.PadintoDate(value);
-    console.log(corrected);
     const paddedDate = corrected.padEnd(8, '0'); // Pad remaining digits with '0'
     return this.DateCorrection(paddedDate);
   }
@@ -119,8 +139,7 @@ export class DateParserDirective {
     //Length 6 dmyyyyy 122000 or 252000
     if (value.length == 6) {
       value = '0' + value.slice(0, 1) + '0' + value.slice(1);
-    }
-    if (value.length == 7) {
+    } else if (value.length == 7) {
       //Length 7 dmyyyyy 312000 or 2522000
       // if first 2 is less than month max day
       if (
@@ -142,8 +161,7 @@ export class DateParserDirective {
     if (value.length == 1) {
       day = value;
       value = day.padStart(2, '0');
-    }
-    if (value.length == 2) {
+    } else if (value.length == 2) {
       if (parseInt(value) <= this.getMonthMaxDay()) {
         day = value;
         value = day.padStart(2, '0');
@@ -152,8 +170,7 @@ export class DateParserDirective {
         month = value.slice(1);
         value = day.padStart(2, '0') + month.padStart(2, '0');
       }
-    }
-    if (value.length == 3) {
+    } else if (value.length == 3) {
       if (
         parseInt(value.slice(0, 2)) <= this.getMonthMaxDay(parseInt(value[2]))
       ) {
@@ -165,8 +182,7 @@ export class DateParserDirective {
         month = value.slice(1, 3);
         value = day.padStart(2, '0') + month.padStart(2, '0');
       }
-    }
-    if (value.length > 3) {
+    } else {
       day = value.slice(0, 2);
       month = value.slice(2, 4);
       year = value.slice(4);
@@ -182,6 +198,13 @@ export class DateParserDirective {
 
   private formatDateContainingSlash(value: string): string {
     const segments = value.split('/');
+    if (
+      (segments[0] && segments[0].length > 2) ||
+      (segments[1] && segments[1].length > 2) ||
+      (segments[2] && segments[2].length > 4)
+    ) {
+      return this.invalidHandler();
+    }
     const day = segments[0] ? segments[0].padStart(2, '0') : '00';
     const month = segments[1] ? segments[1].padStart(2, '0') : '00';
     const year = segments[2] ? segments[2].padStart(4, '0') : '0000';
@@ -210,7 +233,7 @@ export class DateParserDirective {
       MonthDays[1] = 29; // Adjust for leap year
     }
     if (Day > MonthDays[Month - 1] || Month > 12) {
-      return 'Invalid Date';
+      return this.invalidHandler();
     }
 
     let currentDate = new Date(Year, Month - 1, Day);
@@ -333,4 +356,13 @@ export class DateParserDirective {
     }
   }
   // #endregion
+
+  // #region Invalid Scenario Handler
+  private invalidHandler() {
+    this.addValueToControl('Invalid Date');
+    if (this.addValidation) {
+      this.addValidationErrors();
+    }
+    return 'Invalid Date';
+  }
 }
